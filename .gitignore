@@ -1,0 +1,21 @@
+# Зависимости и сборка
+node_modules/
+dist/
+.astro/
+
+# Секреты и локальные настройки
+.env
+.env.*
+*.pem
+*.key
+
+# Локальные настройки редакторов и инструментов
+.claude/
+.vscode/
+.idea/
+
+# Системный мусор
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log

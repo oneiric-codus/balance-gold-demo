@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Зал и тренажёры — Balance Gold Live, фитнес-клуб в Перми</title>
+  <meta name="description" content="Тренажёры фитнес-клуба Balance Gold Live по группам мышц: спина, грудь, плечи, руки, ноги, пресс, кардио.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Зал и тренажёры — Balance Gold Live">
+  <meta property="og:description" content="Тренажёры фитнес-клуба Balance Gold Live по группам мышц: спина, грудь, плечи, руки, ноги, пресс, кардио.">
+  <meta property="og:image" content="assets/logo.png">
+  <meta property="og:locale" content="ru_RU">
+  <meta name="theme-color" content="#0c0c0d">
+  <link rel="icon" href="assets/logo.png">
+  <link rel="apple-touch-icon" href="assets/logo.png">
+  <script>
+    (function (d) {
+      try { var t = localStorage.getItem("bg-theme"); if (t) d.setAttribute("data-theme", t); } catch (e) {}
+      d.classList.add("js");
+      setTimeout(function () { if (!window.__animReady) d.classList.remove("js"); }, 2500);
+    })(document.documentElement);
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=5">
+  <link rel="stylesheet" href="css/app.css?v=5">
+</head>
+<body class="app">
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+  <header id="site-header"></header>
+  <main id="main">
+    <section class="page-top">
+      <div class="page-top__bg" aria-hidden="true">Gym</div>
+      <div class="wrap">
+        <nav class="crumbs2" aria-label="Хлебные крошки"><a href="index.html">Главная</a><span aria-hidden="true">›</span><span>Зал и тренажёры</span></nav>
+        <span class="dot-label" data-anim="fade">Зал</span>
+        <h1 data-anim="up" style="--i:1">Тренажёры в зале</h1>
+        <p data-anim="up" style="--i:2">Оборудование на все группы мышц: турник и брусья, гравитрон, блочные тренажёры, свободные веса и кардиозона.</p>
+      </div>
+    </section>
+
+    <!-- ВНИМАНИЕ: список тренажёров общий (типовой). Сверьте его с реальным оборудованием зала — правится в js/data.js → equipment. -->
+    <section class="sec">
+      <div class="wrap">
+        <div class="metrics" style="margin-bottom:var(--gap)">
+          <div class="card metric" data-anim="up"><b data-render="groupCount"></b><span>групп мышц</span></div>
+          <div class="card metric" data-anim="up" style="--i:1"><b data-render="equipCount"></b><span>позиций оборудования</span></div>
+        </div>
+        <div class="stack" data-render="equipFolds"></div>
+        <p class="disclaim">Список оборудования уточняется — актуальный состав зала подскажет администратор.</p>
+      </div>
+    </section>
+
+    <section class="sec sec--invert">
+      <div class="wrap">
+        <div class="sec-head"><div><span class="dot-label">Новичкам</span><h2 class="sec-title">Как начать</h2></div></div>
+        <div class="steps2" data-render="steps2"></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="wrap">
+        <div class="cta-card" data-anim="up">
+          <div><h2>Пробная тренировка</h2><p>Покажем зал, поможем с техникой и подберём формат. [Условия]</p></div>
+          <a class="b b--dark b--block press" href="kontakty.html#zayavka">Записаться</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer id="site-footer"></footer>
+  <script src="js/data.js?v=5"></script>
+  <script src="js/main.js?v=5"></script>
+</body>
+</html>

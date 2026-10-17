@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Balance Gold Live — фитнес-клуб в Перми, ул. Писарева, 56А</title>
+  <meta name="description" content="Фитнес-клуб Balance Gold Live в Перми: тренажёрный зал, персональные и групповые тренировки, массаж и сауна. Запишитесь на пробную тренировку.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Balance Gold Live — фитнес-клуб в Перми">
+  <meta property="og:description" content="Тренажёрный зал, тренеры, групповые программы, массаж и сауна на ул. Писарева, 56А.">
+  <meta property="og:image" content="assets/logo.png">
+  <meta property="og:locale" content="ru_RU">
+  <meta name="theme-color" content="#0c0c0d">
+  <link rel="icon" href="assets/logo.png">
+  <link rel="apple-touch-icon" href="assets/logo.png">
+  <script>
+    /* До отрисовки: тема из памяти + класс .js для анимаций (если main.js не загрузится, через 2.5 с всё покажется) */
+    (function (d) {
+      try { var t = localStorage.getItem("bg-theme"); if (t) d.setAttribute("data-theme", t); } catch (e) {}
+      d.classList.add("js");
+      setTimeout(function () { if (!window.__animReady) d.classList.remove("js"); }, 2500);
+    })(document.documentElement);
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=5">
+  <link rel="stylesheet" href="css/app.css?v=5">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SportsActivityLocation",
+    "name": "Balance Gold Live",
+    "description": "Фитнес-клуб: тренажёрный зал, персональные и групповые тренировки, массаж, сауна",
+    "image": "assets/logo.png",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "ул. Писарева, 56А",
+      "addressLocality": "Пермь",
+      "addressCountry": "RU"
+    },
+    "telephone": "[Телефон]",
+    "openingHours": "[Часы работы]"
+  }
+  </script>
+</head>
+<body class="app">
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+  <header id="site-header"></header>
+
+  <main id="main">
+    <!-- ПЕРВЫЙ ЭКРАН: фото (пока плейсхолдер) + огромный бледный текст + заголовок + 2 кнопки -->
+    <section class="hero2" aria-labelledby="hero-title">
+      <div class="hero2__media" role="img" aria-label="Место для фото зала или людей на тренировке"></div>
+      <div class="hero2__shade" aria-hidden="true"></div>
+      <div class="hero2__bgtext" aria-hidden="true"><span>Balance</span><span>Gold</span></div>
+      <span class="hero2__note">Здесь будет фото зала / людей</span>
+      <div class="wrap">
+        <span class="dot-label" data-anim="fade">Фитнес-клуб · Пермь</span>
+        <h1 id="hero-title" data-anim="up" style="--i:1">Фитнес-клуб<br><em>Balance Gold</em></h1>
+        <p class="hero2__slogan" data-anim="up" style="--i:2" data-render="clubText" data-key="slogan"></p>
+        <div class="hero2__actions" data-anim="up" style="--i:3">
+          <a class="b b--gold press" href="#zayavka">Записаться на пробную тренировку</a>
+          <a class="b b--glass press" href="#ceny">Цены и абонементы</a>
+        </div>
+        <!-- Стеклянные карточки с цифрами (всегда поверх тёмного фото — читаются в обеих темах) -->
+        <div class="stats" data-render="stats2"></div>
+      </div>
+    </section>
+
+    <!-- НАПРАВЛЕНИЯ: карточки с фото -->
+    <section class="sec" aria-labelledby="dir-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="dot-label">Направления</span><h2 class="sec-title" id="dir-title">Чем заняться</h2></div>
+          <a class="more" href="trenirovki.html">Показать все</a>
+        </div>
+        <div class="rail" data-render="dirCards"></div>
+      </div>
+    </section>
+
+    <!-- УСЛУГИ: группа строк в одной карточке (светлая тёплая секция) -->
+    <section class="sec sec--invert" aria-labelledby="svc-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="dot-label">Услуги</span><h2 class="sec-title" id="svc-title">В клубе</h2></div>
+          <a class="more" href="ceny.html">Показать все</a>
+        </div>
+        <div class="card rows" data-anim="up" data-render="serviceRows"></div>
+      </div>
+    </section>
+
+    <!-- КАК НАЧАТЬ: нумерованные карточки, одна золотая -->
+    <section class="sec sec--alt" aria-labelledby="steps-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="dot-label">Новичкам</span><h2 class="sec-title" id="steps-title">Как начать</h2></div>
+        </div>
+        <div class="steps2" data-render="steps2"></div>
+      </div>
+    </section>
+
+    <!-- ЗАЛ: фото на всю ширину + строки групп мышц -->
+    <section class="bleed" aria-labelledby="gym-title">
+      <div class="bleed__photo" role="img" aria-label="Место для фото тренажёрного зала"><span style="position:relative;z-index:1">Фото тренажёрного зала на всю ширину</span></div>
+      <div class="wrap bleed__head">
+        <div class="sec-head">
+          <div><span class="dot-label">Зал</span><h2 class="sec-title" id="gym-title">Тренажёры в зале</h2></div>
+          <a class="more" href="zal.html">Показать все</a>
+        </div>
+        <div class="card rows" data-anim="up" data-render="muscleRows" data-limit="5"></div>
+      </div>
+    </section>
+
+    <!-- ТРЕНЕРЫ -->
+    <section class="sec" aria-labelledby="coach-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="dot-label">Команда</span><h2 class="sec-title" id="coach-title">Тренеры</h2></div>
+          <a class="more" href="trenery.html">Показать все</a>
+        </div>
+        <div class="rail" data-render="coaches" data-limit="3"></div>
+      </div>
+    </section>
+
+    <!-- РАСПИСАНИЕ: вкладки по дням -->
+    <section class="sec sec--invert" aria-labelledby="sch-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="dot-label">Групповые</span><h2 class="sec-title" id="sch-title">Расписание</h2></div>
+          <a class="more" href="trenirovki.html#raspisanie">Показать все</a>
+        </div>
+        <div data-anim="up" data-render="dayTabs"></div>
+      </div>
+    </section>
+
+    <!-- ЦЕНЫ -->
+    <section class="sec" id="ceny" aria-labelledby="price-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="dot-label">Абонементы</span><h2 class="sec-title" id="price-title">Цены</h2></div>
+          <a class="more" href="ceny.html">Показать все</a>
+        </div>
+        <div class="rail rail--4" data-render="plans" style="padding-top:8px"></div>
+        <p class="note">Актуальные цены уточняйте у администратора.</p>
+      </div>
+    </section>
+
+    <!-- ОТЗЫВЫ -->
+    <section class="sec sec--alt" aria-labelledby="rev-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="dot-label">Отзывы</span><h2 class="sec-title" id="rev-title">Клиенты о нас</h2></div>
+        </div>
+        <div class="rail" data-render="quotes"></div>
+      </div>
+    </section>
+
+    <!-- КОНТАКТЫ И ЗАЯВКА -->
+    <section class="sec sec--invert" id="zayavka" aria-labelledby="cnt-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="dot-label">Контакты</span><h2 class="sec-title" id="cnt-title">Приходите</h2></div>
+          <a class="more" href="kontakty.html">Показать все</a>
+        </div>
+        <div class="contact2">
+          <div style="display:grid;gap:var(--gap)">
+            <div class="card rows" data-anim="left" data-render="contactRows"></div>
+            <div class="card map2" data-anim="left" data-render="map"></div>
+          </div>
+          <div data-anim="right" data-render="leadForm"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script src="js/data.js?v=5"></script>
+  <script src="js/main.js?v=5"></script>
+</body>
+</html>
