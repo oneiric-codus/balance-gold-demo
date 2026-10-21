@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
-  <title>Balance Gold Live — фитнес-клуб в Перми, ул. Писарева, 56А</title>
-  <meta name="description" content="Фитнес-клуб Balance Gold Live в Перми: тренажёрный зал, персональные и групповые тренировки, массаж и сауна. Запишитесь на пробную тренировку.">
+  <title>Balance Gold Live — фитнес-клуб на Гайве, Пермь, ул. Писарева, 56А</title>
+  <meta name="description" content="Фитнес-клуб Balance Gold Live на Гайве (Пермь, ул. Писарева, 56А): тренажёрный зал, йога, пилатес, Zumba, персональные тренировки и массаж. Пробная тренировка — 300 ₽.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Balance Gold Live — фитнес-клуб в Перми">
+  <meta property="og:title" content="Balance Gold Live — фитнес-клуб на Гайве">
   <meta property="og:description" content="Тренажёрный зал, тренеры, групповые программы, массаж и сауна на ул. Писарева, 56А.">
   <meta property="og:image" content="assets/logo.png">
   <meta property="og:locale" content="ru_RU">
@@ -25,14 +25,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=5">
-  <link rel="stylesheet" href="css/app.css?v=5">
+  <link rel="stylesheet" href="css/styles.css?v=7">
+  <link rel="stylesheet" href="css/app.css?v=7">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SportsActivityLocation",
     "name": "Balance Gold Live",
-    "description": "Фитнес-клуб: тренажёрный зал, персональные и групповые тренировки, массаж, сауна",
+    "description": "Фитнес-клуб на Гайве: тренажёрный зал, групповые программы, персональные тренировки, массаж",
     "image": "assets/logo.png",
     "address": {
       "@type": "PostalAddress",
@@ -40,8 +40,14 @@
       "addressLocality": "Пермь",
       "addressCountry": "RU"
     },
-    "telephone": "[Телефон]",
-    "openingHours": "[Часы работы]"
+    "telephone": "+7 (908) 249-34-12",
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "21:30" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday", "Sunday"], "opens": "10:00", "closes": "18:00" }
+    ],
+    "priceRange": "300–18 900 ₽",
+    "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "137" },
+    "sameAs": ["https://vk.ru/club185053084", "https://yandex.ru/maps/org/balance/8269110183/"]
   }
   </script>
 </head>
@@ -57,15 +63,25 @@
       <div class="hero2__bgtext" aria-hidden="true"><span>Balance</span><span>Gold</span></div>
       <span class="hero2__note">Здесь будет фото зала / людей</span>
       <div class="wrap">
-        <span class="dot-label" data-anim="fade">Фитнес-клуб · Пермь</span>
-        <h1 id="hero-title" data-anim="up" style="--i:1">Фитнес-клуб<br><em>Balance Gold</em></h1>
+        <span class="dot-label" data-anim="fade">Фитнес-клуб · Гайва, Пермь<span class="hero2__status" data-render="openStatus"></span></span>
+        <h1 id="hero-title" data-anim="up" style="--i:1">Фитнес-клуб<br>на Гайве<br><em>Balance Gold</em></h1>
         <p class="hero2__slogan" data-anim="up" style="--i:2" data-render="clubText" data-key="slogan"></p>
         <div class="hero2__actions" data-anim="up" style="--i:3">
-          <a class="b b--gold press" href="#zayavka">Записаться на пробную тренировку</a>
+          <a class="b b--gold press" href="kontakty.html" data-book>Пробная тренировка за 300 ₽</a>
           <a class="b b--glass press" href="#ceny">Цены и абонементы</a>
         </div>
         <!-- Стеклянные карточки с цифрами (всегда поверх тёмного фото — читаются в обеих темах) -->
         <div class="stats" data-render="stats2"></div>
+      </div>
+    </section>
+
+    <!-- АКЦИИ (js/data.js → promos; карточка скрывается сама после даты окончания) -->
+    <section class="sec" aria-labelledby="promo-title" style="padding-bottom:0">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="dot-label">Акции</span><h2 class="sec-title" id="promo-title">Сейчас выгодно</h2></div>
+        </div>
+        <div class="promos" data-render="promos"></div>
       </div>
     </section>
 
@@ -152,8 +168,9 @@
       <div class="wrap">
         <div class="sec-head">
           <div><span class="dot-label">Отзывы</span><h2 class="sec-title" id="rev-title">Клиенты о нас</h2></div>
+          <a class="more" href="https://yandex.ru/maps/org/balance/8269110183/reviews/" target="_blank" rel="noopener">Яндекс Карты</a>
         </div>
-        <div class="rail" data-render="quotes"></div>
+        <div data-render="yaReviews"></div>
       </div>
     </section>
 
@@ -177,7 +194,7 @@
 
   <footer id="site-footer"></footer>
 
-  <script src="js/data.js?v=5"></script>
-  <script src="js/main.js?v=5"></script>
+  <script src="js/data.js?v=7"></script>
+  <script src="js/main.js?v=7"></script>
 </body>
 </html>

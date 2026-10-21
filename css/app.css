@@ -501,3 +501,35 @@ body { padding-bottom: calc(var(--tabbar-h) + var(--safe-b)); }
 .app .dialog .photo-ph--light { background: linear-gradient(150deg, var(--card-2), var(--bg-2)); color: var(--fg-2); }
 .coach__name button { display: inline-flex; align-items: center; min-height: 44px; }
 .app .check a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* =========================================================
+   Реальные данные клуба: акции, рейтинг, статус работы, реквизиты
+   ========================================================= */
+.promos { display: grid; gap: var(--gap); }
+@media (min-width: 768px) { .promos { grid-template-columns: 1fr 1fr; } }
+.promo { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 22px 18px 18px; border-radius: var(--r-xl);
+  background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.promo h3 { margin: 6px 0 0; font: 700 1.6rem/1.05 var(--font-display); text-transform: uppercase; }
+.promo p { color: var(--fg-2); margin-bottom: 8px; }
+.promo .b { margin-top: auto; }
+.promo__badge { align-self: flex-start; padding: 6px 12px; border-radius: var(--r-pill); background: var(--gold-soft); color: var(--gold); font-weight: 700; font-size: .85rem; letter-spacing: .04em; }
+.promo--gold { background: var(--gold-grad); color: var(--on-gold); border-color: transparent; box-shadow: 0 18px 44px rgba(201,162,58,.28); }
+.promo--gold p { color: var(--on-gold); opacity: .82; }
+.promo--gold .promo__badge { background: #141414; color: #e8c766; font-size: 1.1rem; }
+
+.plan__price s { font: 400 1rem var(--font-ui); color: var(--fg-2); margin-left: 10px; }
+
+.rating { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2px 14px; padding: 18px; text-decoration: none; color: inherit; margin-bottom: var(--gap); }
+.rating b { grid-row: span 2; font: 700 3.2rem/1 var(--font-display); color: var(--gold); }
+.rating__stars { color: var(--gold); letter-spacing: 3px; font-size: 1.1rem; }
+.rating__meta { color: var(--fg-2); font-size: .92rem; }
+.rating .more { grid-column: 1 / -1; justify-self: start; }
+.ya-widget { overflow: hidden; height: 560px; padding: 0; }
+.ya-widget iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+.open-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #c0574b; margin-right: 6px; vertical-align: 1px; }
+.open-dot.is-open { background: #3fb36b; box-shadow: 0 0 0 3px rgba(63,179,107,.2); }
+.hero2__status { display: inline-flex; align-items: center; margin-left: 10px; font-size: .78rem; font-weight: 500; letter-spacing: 0; text-transform: none; color: rgba(255,255,255,.8); }
+.hero2__status:empty { display: none; }
+
+.app-footer__legal { font-size: .82rem; color: var(--fg-2); line-height: 1.45; }

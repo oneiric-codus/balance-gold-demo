@@ -28,13 +28,33 @@
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
     check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>',
+    vk: '<path d="M3.5 7.5h3c.4 3.4 1.9 5.4 3.5 5.9V7.5h2.7v3.3c1.5-.2 3-1.8 3.6-3.3h2.7c-.5 2.2-2.1 3.9-3.3 4.6 1.2.6 3 2.1 3.7 4.4h-3c-.6-1.6-2-2.9-3.7-3.1v3.1h-.4C6.6 16.5 3.8 13 3.5 7.5z"/>',
     moon: '<path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z"/>'
   };
   const icon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n] || ""}</svg>`;
   const photo = (label, light) => `<div class="photo-ph${light ? " photo-ph--light" : ""}" role="img" aria-label="Место для фото: ${esc(label)}"><span>${icon("camera")}${esc(label)}</span></div>`;
   const tel = (raw) => (raw && !/^\[/.test(raw) ? "tel:" + raw.replace(/[^\d+]/g, "") : "kontakty.html");
   const callHref = S.club.phoneHref ? "tel:" + S.club.phoneHref : "kontakty.html";
-  const mapSrc = "https://yandex.ru/map-widget/v1/?text=" + encodeURIComponent(S.club.mapQuery) + "&z=16";
+  const mapSrc = S.club.yandexOrgId
+    ? "https://yandex.ru/map-widget/v1/org/balance/" + S.club.yandexOrgId + "/?z=16"
+    : "https://yandex.ru/map-widget/v1/?text=" + encodeURIComponent(S.club.mapQuery) + "&z=16";
+  /* Запись на пробную — сразу в форму ВКонтакте (новая вкладка) */
+  const bookHref = S.club.bookingUrl || "kontakty.html#zayavka";
+  const ext = (url) => (/^https?:/.test(url) ? ' target="_blank" rel="noopener"' : "");
+  const fmtNum = (n) => Number(n).toLocaleString("ru-RU");
+
+  /* «Открыто до 21:30» / «Закрыто, откроется в 8:00» — по времени Перми */
+  const openStatus = () => {
+    const sch = S.club.schedule;
+    if (!sch) return "";
+    const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Yekaterinburg" }));
+    const mins = (t) => +t.slice(0, 2) * 60 + +t.slice(3);
+    const nowM = now.getHours() * 60 + now.getMinutes();
+    const today = sch[now.getDay()];
+    if (today && nowM >= mins(today[0]) && nowM < mins(today[1])) return `<span class="open-dot is-open"></span>Открыто до ${today[1].replace(/^0/, "")}`;
+    const next = today && nowM < mins(today[0]) ? today : sch[(now.getDay() + 1) % 7];
+    return `<span class="open-dot"></span>Закрыто · откроется в ${next[0].replace(/^0/, "")}`;
+  };
 
   /* Ссылки «в одно нажатие»: звонок, мессенджеры, карта. Пока в data.js заглушки — ведут на «Контакты». */
   const isPh = (s) => !s || /^\[/.test(s);
@@ -77,7 +97,7 @@
       <div class="card rows group">${S.nav.map((n) => `
         <a class="row" href="${n.href}"${n.href === page ? ' aria-current="page"' : ""}><span class="row__icon">${icon(menuIcons[n.href])}</span>
           <span class="row__text"><b>${esc(n.label)}</b></span><span class="row__chev"></span></a>`).join("")}</div>
-      <a class="b b--gold b--block press" href="kontakty.html#zayavka">Записаться на пробную</a>
+      <a class="b b--gold b--block press" href="${bookHref}"${ext(bookHref)}>Записаться на пробную</a>
       <div class="sheet__actions">
         <a class="b b--line press" href="${callHref}">${icon("phone")}Позвонить</a>
         <a class="b b--line press" href="${mapLink}" target="_blank" rel="noopener">${icon("pin")}Маршрут</a>
@@ -122,9 +142,11 @@
         <div class="card rows">
           <a class="row" href="${mapLink}" target="_blank" rel="noopener"><span class="row__icon">${icon("pin")}</span><span class="row__text"><b>${esc(S.club.address)}</b><span>Открыть на карте</span></span><span class="row__chev"></span></a>
           <a class="row" href="${callHref}"><span class="row__icon">${icon("phone")}</span><span class="row__text"><b>${ph(S.club.phone)}</b><span>Позвонить</span></span><span class="row__chev"></span></a>
-          <div class="row"><span class="row__icon">${icon("clock")}</span><span class="row__text"><b>${ph(S.club.hours)}</b><span>Режим работы</span></span></div>
+          <a class="row" href="${S.club.vk}" target="_blank" rel="noopener"><span class="row__icon">${icon("vk")}</span><span class="row__text"><b>ВКонтакте</b><span>${fmtNum(S.club.vkSubscribers)} подписчиков</span></span><span class="row__chev"></span></a>
+          <div class="row"><span class="row__icon">${icon("clock")}</span><span class="row__text"><b>${esc(S.club.hours)}</b><span>${openStatus()}</span></span></div>
         </div>
         <nav class="app-footer__links" aria-label="Разделы">${S.nav.slice(1).map((n) => `<a href="${n.href}">${esc(n.label)}</a>`).join("")}</nav>
+        ${S.club.legal ? `<p class="app-footer__legal">${esc(S.club.legal.owner)} · ИНН ${esc(S.club.legal.inn)} · ОГРН ${esc(S.club.legal.ogrn)}</p>` : ""}
         <div class="app-footer__bottom"><span>© ${new Date().getFullYear()} ${esc(S.club.name)}. Демо-макет сайта.</span><a href="privacy.html">Политика конфиденциальности</a></div>
       </div>`;
   }
@@ -364,7 +386,7 @@
       <article class="card plan${p.popular ? " plan--hot" : ""}" data-anim="up" style="--i:${i}">
         ${p.popular ? '<span class="plan__badge">Популярный</span>' : ""}
         <h3>${esc(p.title)}</h3><p>${esc(p.text)}</p>
-        <div class="plan__price">${ph(p.value)}<small>${esc(p.per)}</small></div>
+        <div class="plan__price">${ph(p.value)}${p.old ? `<s>${esc(p.old)}</s>` : ""}${p.per ? `<small>${esc(p.per)}</small>` : ""}</div>
         <ul>${p.features.map((f) => `<li>${icon("check")}<span>${ph(f)}</span></li>`).join("")}</ul>
         <a class="b ${p.popular ? "b--gold" : "b--line"} b--block press" href="${page === "index.html" ? "" : "kontakty.html"}#zayavka">Выбрать</a>
       </article>`).join("")),
@@ -375,15 +397,46 @@
         <figcaption class="quote__who"><i aria-hidden="true"></i><span>${ph(r.author)}<small>${ph(r.meta)}</small></span></figcaption>
       </figure>`).join("")),
     contactRows: (el) => {
-      const wa = S.club.socials.find((s) => s.name === "WhatsApp");
-      const tg = S.club.socials.find((s) => s.name === "Telegram");
       el.innerHTML = `
-        <a class="row" href="${mapLink}" target="_blank" rel="noopener"><span class="row__icon">${icon("pin")}</span><span class="row__text"><b>${esc(S.club.address)}</b><span>Построить маршрут</span></span><span class="row__chev"></span></a>
+        <a class="row" href="${mapLink}" target="_blank" rel="noopener"><span class="row__icon">${icon("pin")}</span><span class="row__text"><b>${esc(S.club.address)}</b><span>${esc(S.club.landmark || "Построить маршрут")}</span></span><span class="row__chev"></span></a>
         <a class="row" href="${callHref}"><span class="row__icon">${icon("phone")}</span><span class="row__text"><b>${ph(S.club.phone)}</b><span>Позвонить</span></span><span class="row__chev"></span></a>
-        <a class="row" href="${wa && wa.url !== "#" ? wa.url : "kontakty.html"}"><span class="row__icon">${icon("wa")}</span><span class="row__text"><b>WhatsApp</b><span>Написать администратору</span></span><span class="row__chev"></span></a>
-        <a class="row" href="${tg && tg.url !== "#" ? tg.url : "kontakty.html"}"><span class="row__icon">${icon("tg")}</span><span class="row__text"><b>Telegram</b><span>Написать администратору</span></span><span class="row__chev"></span></a>
-        <div class="row"><span class="row__icon">${icon("clock")}</span><span class="row__text"><b>${ph(S.club.hours)}</b><span>Режим работы</span></span></div>`;
+        <a class="row" href="${S.club.vkMessages}" target="_blank" rel="noopener"><span class="row__icon">${icon("chat")}</span><span class="row__text"><b>Написать во ВКонтакте</b><span>Ответим в сообщениях группы</span></span><span class="row__chev"></span></a>
+        <a class="row" href="${bookHref}"${ext(bookHref)}><span class="row__icon">${icon("calendar")}</span><span class="row__text"><b>Записаться на пробную</b><span>300 ₽ · онлайн-запись ВКонтакте</span></span><span class="row__chev"></span></a>
+        <div class="row"><span class="row__icon">${icon("clock")}</span><span class="row__text"><b>Пн–Пт 8:00–21:30</b><span>Сб–Вс 10:00–18:00 · ${openStatus()}</span></span></div>`;
     },
+
+    /* Акции (скрываются сами после даты until) */
+    promos: (el) => {
+      const today = new Date().toISOString().slice(0, 10);
+      const list = (S.promos || []).filter((p) => !p.until || p.until >= today);
+      if (!list.length) { el.closest("section")?.remove(); return; }
+      const url = (u) => (u === "booking" ? bookHref : u === "vkMessages" ? S.club.vkMessages : u);
+      el.innerHTML = list.map((p, i) => `
+        <article class="promo${i === 0 ? " promo--gold" : ""}" data-anim="up" style="--i:${i}">
+          <span class="promo__badge">${esc(p.badge)}</span>
+          <h3>${esc(p.title)}</h3><p>${esc(p.text)}</p>
+          <a class="b ${i === 0 ? "b--dark" : "b--gold"} b--block press" href="${url(p.url)}"${ext(url(p.url))}>${esc(p.cta)}</a>
+        </article>`).join("");
+    },
+    /* Отзывы — живой виджет Яндекс Карт (всегда актуальные, без ручного копирования) */
+    yaReviews: (el) => {
+      const c = S.club, r = c.rating;
+      el.innerHTML = `
+        <a class="card rating" href="${c.yandexUrl}reviews/" target="_blank" rel="noopener" data-anim="up">
+          <b>${esc(r.value)}</b>
+          <span class="rating__stars" aria-hidden="true">★★★★★</span>
+          <span class="rating__meta">${r.votes} оценок · ${r.reviews} отзыва на Яндекс Картах</span>
+          <span class="more">Все отзывы</span>
+        </a>
+        <div class="card ya-widget" data-anim="up" style="--i:1">
+          <iframe src="https://yandex.ru/maps-reviews-widget/${c.yandexOrgId}?comments" title="Отзывы о клубе на Яндекс Картах" loading="lazy"></iframe>
+        </div>`;
+    },
+    openStatus: (el) => (el.innerHTML = openStatus()),
+    hoursRows: (el) => (el.innerHTML = `
+      <div class="row"><span class="row__icon">${icon("clock")}</span><span class="row__text"><b>Понедельник — пятница</b></span><span class="row__meta">8:00–21:30</span></div>
+      <div class="row"><span class="row__icon">${icon("calendar")}</span><span class="row__text"><b>Суббота и воскресенье</b></span><span class="row__meta">10:00–18:00</span></div>`),
+    legal: (el) => (el.textContent = S.club.legal ? `${S.club.legal.owner}, ИНН ${S.club.legal.inn}, ОГРН ${S.club.legal.ogrn}` : "[реквизиты]"),
 
     /* ===== Внутренние страницы v2 ===== */
     person: (el) => {
@@ -481,15 +534,20 @@
     extraRows: (el) => (el.innerHTML = S.extraPrices.map((p) => `
       <div class="row"><span class="row__text"><b>${ph(p[0])}</b></span><span class="row__meta">${ph(p[1])}</span></div>`).join("")),
     quick: (el) => {
-      const wa = S.club.socials.find((s) => s.name === "WhatsApp");
       el.innerHTML = `<a class="press" href="${callHref}">${icon("phone")}Позвонить</a>
-        <a class="press" href="${wa && wa.url !== "#" ? wa.url : "#zayavka"}">${icon("wa")}WhatsApp</a>
+        <a class="press" href="${S.club.vkMessages}" target="_blank" rel="noopener">${icon("vk")}ВКонтакте</a>
         <a class="press" href="${mapLink}" target="_blank" rel="noopener">${icon("pin")}Маршрут</a>`;
     },
 
     interests: (el) => (el.innerHTML = '<option value="">Выберите…</option>' + S.formInterests.map((i) => `<option>${esc(i)}</option>`).join(""))
   };
   document.querySelectorAll("[data-render]").forEach((el) => R[el.dataset.render] && R[el.dataset.render](el));
+
+  /* Кнопки «Записаться на пробную» (data-book) ведут в онлайн-запись ВКонтакте */
+  document.querySelectorAll("[data-book]").forEach((a) => {
+    a.href = bookHref;
+    if (/^https?:/.test(bookHref)) { a.target = "_blank"; a.rel = "noopener"; }
+  });
 
   /* Подсветка заглушек [..], написанных прямо в HTML страниц */
   const walker = document.createTreeWalker(document.getElementById("main") || document.body, NodeFilter.SHOW_TEXT);
@@ -592,7 +650,7 @@
     const to = +el.dataset.count, t0 = performance.now(), dur = 900;
     const step = (t) => {
       const k = Math.min(1, (t - t0) / dur);
-      el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3)));
+      el.textContent = fmtNum(Math.round(to * (1 - Math.pow(1 - k, 3))));
       if (k < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
@@ -607,6 +665,20 @@
       io2.unobserve(e.target);
     }), { threshold: .15, rootMargin: "0px 0px -6% 0px" });
     animated.forEach((el) => io2.observe(el));
+    /* Подстраховка: если наблюдатель не сработал (старый браузер, фоновая вкладка),
+       показываем всё, что уже на экране, по таймеру и при прокрутке */
+    const reveal = () => animated.forEach((el) => {
+      if (el.classList.contains("in")) return;
+      const r = el.getBoundingClientRect();
+      if (r.top < innerHeight && r.bottom > 0) {
+        el.classList.add("in");
+        el.querySelectorAll("[data-count]").forEach(countUp);
+        io2.unobserve(el);
+      }
+    });
+    setTimeout(reveal, 900);
+    let rq = false;
+    window.addEventListener("scroll", () => { if (!rq) { rq = true; setTimeout(() => { rq = false; reveal(); }, 250); } }, { passive: true });
   } else {
     animated.forEach((el) => el.classList.add("in"));
     document.querySelectorAll("[data-count]").forEach((el) => (el.textContent = el.dataset.count));
