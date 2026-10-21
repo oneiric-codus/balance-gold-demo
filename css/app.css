@@ -533,3 +533,57 @@ body { padding-bottom: calc(var(--tabbar-h) + var(--safe-b)); }
 .hero2__status:empty { display: none; }
 
 .app-footer__legal { font-size: .82rem; color: var(--fg-2); line-height: 1.45; }
+
+/* =========================================================
+   Юридическое: плашка cookie, заглушки карт/отзывов, документы в подвале, запись через ВК
+   ========================================================= */
+.cookie-bar { position: fixed; z-index: 70; left: 8px; right: 8px; bottom: calc(var(--tabbar-h) + var(--safe-b) + 8px);
+  padding: 16px; border-radius: var(--r-lg); background: var(--card); color: var(--fg); border: 1px solid var(--line);
+  box-shadow: 0 18px 50px rgba(0,0,0,.45); transform: translateY(24px); opacity: 0; visibility: hidden;
+  transition: transform .4s var(--ease-out), opacity .3s, visibility .3s; }
+.cookie-bar.is-open { transform: none; opacity: 1; visibility: visible; }
+.cookie-bar p { font-size: .9rem; line-height: 1.45; color: var(--fg-2); }
+.cookie-bar a { color: var(--gold); }
+.cookie-bar__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.cookie-bar .b { min-height: 48px; padding: 0 10px; font-size: .92rem; }
+@media (min-width: 1024px) { .cookie-bar { left: 24px; right: auto; bottom: 24px; max-width: 440px; } }
+
+.embed-ph { min-height: 240px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: 24px 18px; text-align: center; color: var(--fg-2); background: linear-gradient(150deg, var(--card-2), var(--bg-2)); }
+.embed-ph svg { width: 30px; height: 30px; color: var(--gold); }
+.embed-ph p { color: var(--fg); font-weight: 600; }
+.embed-ph small { font-size: .8rem; max-width: 32ch; }
+.embed-ph a { color: var(--gold); }
+.embed-ph .b { min-width: 160px; }
+.ya-widget { height: auto; }
+.ya-widget.is-loaded { height: 620px; background: #fff; }
+.map2 .embed-ph { position: absolute; inset: 0; }
+
+.rating { display: grid; gap: 12px; grid-template-columns: none; }
+.rating__top { display: flex; align-items: center; gap: 14px; }
+.rating__top > div { display: grid; gap: 2px; }
+.rating__row { display: grid; grid-template-columns: 84px 1fr 44px; align-items: center; gap: 10px; font-size: .92rem; }
+.rating__row b { text-align: right; font-weight: 600; }
+.rating__bar { height: 8px; border-radius: 8px; background: var(--card-2); overflow: hidden; }
+.rating__bar i { display: block; height: 100%; border-radius: 8px; background: var(--gold-grad); }
+.rating__note { font-size: .8rem; color: var(--fg-2); margin-top: -4px; }
+
+.book { display: grid; gap: 10px; padding: 22px 18px; }
+.book h3 { margin: 0; font: 700 1.6rem/1.05 var(--font-display); text-transform: uppercase; }
+.book p { color: var(--fg-2); margin-bottom: 6px; }
+
+.app-footer__docs { display: flex; flex-wrap: wrap; gap: 0 18px; }
+.app-footer__docs a, .app-footer__docs button { min-height: 44px; display: inline-flex; align-items: center; color: var(--fg); text-decoration: underline; text-underline-offset: 3px;
+  background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }
+.app-footer__legal { display: grid; gap: 6px; }
+.app-footer__legal p { font-size: .82rem; color: var(--fg-2); line-height: 1.45; }
+.app-footer__legal b { color: var(--fg); font-weight: 600; }
+.warn { margin-top: 12px; padding: 12px 14px; border-radius: var(--r-md); background: var(--gold-soft); color: var(--fg); font-size: .9rem; }
+.rating__row b { grid-row: auto; font: 600 .92rem var(--font-ui); color: var(--fg); }
+.rating__top b { font: 700 3.2rem/1 var(--font-display); color: var(--gold); }
+.prose2 ul { margin: 0 0 10px; padding-left: 20px; color: var(--fg-2); }
+.prose2 li { margin-bottom: 6px; }
+.prose2 a { color: var(--gold); }
+.prose2 table { width: 100%; border-collapse: collapse; font-size: .9rem; margin: 6px 0 14px; }
+.prose2 th, .prose2 td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--fg-2); }
+.prose2 th { color: var(--fg); font-weight: 600; }

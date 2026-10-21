@@ -28,7 +28,9 @@ window.SITE = {
     mapQuery: "Пермь, улица Писарева, 56А",
     yandexOrgId: "8269110183",
     yandexUrl: "https://yandex.ru/maps/org/balance/8269110183/",
-    rating: { value: "4,8", votes: 137, reviews: 44 },
+    rating: { value: "4,8", votes: 137, reviews: 44,
+      /* Сводка Яндекс Карт: доля положительных упоминаний */
+      aspects: [{ label: "Персонал", value: 100 }, { label: "Залы", value: 88 }] },
     legal: { owner: "ИП Синякина Кристина Андреевна", inn: "590773651089", ogrn: "319595800099130" },
     facts: [
       { value: "4,8", label: "рейтинг на Яндекс Картах" },

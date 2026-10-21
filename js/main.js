@@ -43,6 +43,25 @@
   const ext = (url) => (/^https?:/.test(url) ? ' target="_blank" rel="noopener"' : "");
   const fmtNum = (n) => Number(n).toLocaleString("ru-RU");
 
+  /* ---------- Cookie: выбор посетителя ----------
+     "all" — разрешены сервисы Яндекса (карта, отзывы); "necessary" — только необходимые (тема сайта). */
+  const CONSENT_KEY = "bg-cookies";
+  const getConsent = () => { try { return localStorage.getItem(CONSENT_KEY); } catch (e) { return null; } };
+  const setConsent = (v) => {
+    try { localStorage.setItem(CONSENT_KEY, v); } catch (e) {}
+    document.dispatchEvent(new CustomEvent("bg-consent", { detail: v }));
+  };
+  /* Встраивание сервиса Яндекса: при согласии — сразу, иначе заглушка с кнопкой «Показать» */
+  const embed = (el, src, title, label) => {
+    const load = () => { el.innerHTML = `<iframe src="${src}" title="${esc(title)}" allowfullscreen></iframe>`; el.classList.add("is-loaded"); };
+    if (getConsent() === "all") return load();
+    el.innerHTML = `<div class="embed-ph">${icon("pin")}<p>${esc(label)}</p>
+      <button type="button" class="b b--line press">Показать</button>
+      <small>Загрузится сервис Яндекса, он использует cookie. <a href="cookie.html">Подробнее</a></small></div>`;
+    el.querySelector("button").addEventListener("click", load);
+    document.addEventListener("bg-consent", (e) => { if (e.detail === "all" && !el.classList.contains("is-loaded")) load(); });
+  };
+
   /* «Открыто до 21:30» / «Закрыто, откроется в 8:00» — по времени Перми */
   const openStatus = () => {
     const sch = S.club.schedule;
@@ -129,6 +148,27 @@
   tabbar.innerHTML = TABS.map(([href, ic, label]) => `<a href="${href}"${href === page ? ' aria-current="page"' : ""}>${icon(ic)}<span>${label}</span></a>`).join("");
   document.body.appendChild(tabbar);
 
+  /* ---------- Плашка cookie (показывается, пока посетитель не сделал выбор) ---------- */
+  const cookieBar = document.createElement("div");
+  cookieBar.className = "cookie-bar";
+  cookieBar.setAttribute("role", "dialog");
+  cookieBar.setAttribute("aria-label", "Использование файлов cookie");
+  cookieBar.innerHTML = `
+    <p>Мы используем файлы cookie: необходимые — для работы сайта, а также cookie сервисов Яндекса (карта и отзывы).
+      Нажимая «Принять», вы соглашаетесь с <a href="cookie.html">политикой cookie</a> и <a href="privacy.html">политикой конфиденциальности</a>.</p>
+    <div class="cookie-bar__actions">
+      <button type="button" class="b b--gold press" data-consent="all">Принять</button>
+      <button type="button" class="b b--line press" data-consent="necessary">Только необходимые</button>
+    </div>`;
+  document.body.appendChild(cookieBar);
+  const showBar = (on) => cookieBar.classList.toggle("is-open", on);
+  if (!getConsent()) setTimeout(() => showBar(true), 600);
+  cookieBar.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-consent]");
+    if (b) { setConsent(b.dataset.consent); showBar(false); }
+  });
+  document.addEventListener("click", (e) => { if (e.target.closest("[data-cookie-settings]")) showBar(true); });
+
   /* ---------- Подвал ---------- */
   const footer = document.getElementById("site-footer");
   if (footer) {
@@ -146,8 +186,19 @@
           <div class="row"><span class="row__icon">${icon("clock")}</span><span class="row__text"><b>${esc(S.club.hours)}</b><span>${openStatus()}</span></span></div>
         </div>
         <nav class="app-footer__links" aria-label="Разделы">${S.nav.slice(1).map((n) => `<a href="${n.href}">${esc(n.label)}</a>`).join("")}</nav>
-        ${S.club.legal ? `<p class="app-footer__legal">${esc(S.club.legal.owner)} · ИНН ${esc(S.club.legal.inn)} · ОГРН ${esc(S.club.legal.ogrn)}</p>` : ""}
-        <div class="app-footer__bottom"><span>© ${new Date().getFullYear()} ${esc(S.club.name)}. Демо-макет сайта.</span><a href="privacy.html">Политика конфиденциальности</a></div>
+        <nav class="app-footer__docs" aria-label="Документы">
+          <a href="privacy.html">Политика конфиденциальности</a>
+          <a href="cookie.html">Политика cookie</a>
+          <button type="button" data-cookie-settings>Настройки cookie</button>
+        </nav>
+        <div class="app-footer__legal">
+          <p><b>Официальный сайт фитнес-клуба ${esc(S.club.name)}</b></p>
+          ${S.club.legal ? `<p>${esc(S.club.legal.owner)} · ИНН ${esc(S.club.legal.inn)} · ОГРН ${esc(S.club.legal.ogrn)}</p>` : ""}
+          <p>Адрес: ${esc(S.club.address)}. Вопросы и претензии: ${esc(S.club.phone)}, сообщения группы ВКонтакте.</p>
+          <p>Информация о ценах и акциях на сайте не является публичной офертой (ст. 437 ГК РФ). Актуальные условия уточняйте у администратора.</p>
+          <p>Рейтинг и отзывы — сервис Яндекс Карты. Фото и видео размещены с согласия изображённых людей.</p>
+        </div>
+        <div class="app-footer__bottom"><span>© ${new Date().getFullYear()} ${esc(S.club.name)}</span><span>${esc(S.club.type)} · ${esc(S.club.district)}, ${esc(S.club.city)}</span></div>
       </div>`;
   }
 
@@ -196,7 +247,7 @@
         <blockquote>${ph(r.text)}</blockquote>
         <figcaption class="review__author"><span class="review__avatar" aria-hidden="true"></span><span>${ph(r.author)}<small>${ph(r.meta)}</small></span></figcaption>
       </figure>`).join("")),
-    map: (el) => (el.innerHTML = `<iframe src="${mapSrc}" title="Карта: ${esc(S.club.address)}" loading="lazy" allowfullscreen></iframe>`),
+    map: (el) => embed(el, mapSrc, "Карта: " + S.club.address, "Карта Яндекса: " + S.club.address),
     contactInfo: (el) => (el.innerHTML = `
       <div><small>Адрес</small>${ph(S.club.address)}</div>
       <div><small>Телефон</small><a href="${callHref}">${ph(S.club.phone)}</a></div>
@@ -388,7 +439,7 @@
         <h3>${esc(p.title)}</h3><p>${esc(p.text)}</p>
         <div class="plan__price">${ph(p.value)}${p.old ? `<s>${esc(p.old)}</s>` : ""}${p.per ? `<small>${esc(p.per)}</small>` : ""}</div>
         <ul>${p.features.map((f) => `<li>${icon("check")}<span>${ph(f)}</span></li>`).join("")}</ul>
-        <a class="b ${p.popular ? "b--gold" : "b--line"} b--block press" href="${page === "index.html" ? "" : "kontakty.html"}#zayavka">Выбрать</a>
+        <a class="b ${p.popular ? "b--gold" : "b--line"} b--block press" href="${S.club.vkMessages}" target="_blank" rel="noopener">Купить через ВКонтакте</a>
       </article>`).join("")),
     quotes: (el) => (el.innerHTML = S.reviews.map((r, i) => `
       <figure class="card quote" style="margin:0;--i:${i}" data-anim="up">
@@ -422,16 +473,27 @@
     yaReviews: (el) => {
       const c = S.club, r = c.rating;
       el.innerHTML = `
-        <a class="card rating" href="${c.yandexUrl}reviews/" target="_blank" rel="noopener" data-anim="up">
-          <b>${esc(r.value)}</b>
-          <span class="rating__stars" aria-hidden="true">★★★★★</span>
-          <span class="rating__meta">${r.votes} оценок · ${r.reviews} отзыва на Яндекс Картах</span>
-          <span class="more">Все отзывы</span>
-        </a>
-        <div class="card ya-widget" data-anim="up" style="--i:1">
-          <iframe src="https://yandex.ru/maps-reviews-widget/${c.yandexOrgId}?comments" title="Отзывы о клубе на Яндекс Картах" loading="lazy"></iframe>
-        </div>`;
+        <div class="card rating" data-anim="up">
+          <div class="rating__top"><b>${esc(r.value)}</b>
+            <div><span class="rating__stars" aria-hidden="true">★★★★★</span>
+              <span class="rating__meta">${r.votes} оценок · ${r.reviews} отзыва на Яндекс Картах</span></div></div>
+          ${(r.aspects || []).map((x) => `<div class="rating__row"><span>${esc(x.label)}</span><span class="rating__bar"><i style="width:${x.value}%"></i></span><b>${x.value}%</b></div>`).join("")}
+          ${r.aspects ? '<p class="rating__note">Доля положительных упоминаний в отзывах</p>' : ""}
+          <a class="b b--line b--block press" href="${c.yandexUrl}reviews/" target="_blank" rel="noopener">Читать все отзывы на Яндекс Картах</a>
+        </div>
+        <div class="card ya-widget" data-anim="up" style="--i:1"></div>`;
+      embed(el.querySelector(".ya-widget"), `https://yandex.ru/maps-reviews-widget/${c.yandexOrgId}?comments`,
+        "Отзывы о клубе на Яндекс Картах", "Свежие отзывы с Яндекс Карт");
     },
+    /* Запись — только через ВКонтакте (вместо формы на сайте) */
+    bookCard: (el) => (el.outerHTML = `
+      <div class="card book">
+        <h3>Пробная тренировка за 300 ₽</h3>
+        <p>Запись онлайн через ВКонтакте: выберите направление и удобное время, администратор подтвердит запись.</p>
+        <a class="b b--gold b--block press" href="${bookHref}"${ext(bookHref)}>${icon("calendar")}Записаться на пробную</a>
+        <a class="b b--line b--block press" href="${S.club.vkMessages}" target="_blank" rel="noopener">${icon("chat")}Написать во ВКонтакте</a>
+        <a class="b b--line b--block press" href="${callHref}">${icon("phone")}Позвонить ${esc(S.club.phone)}</a>
+      </div>`),
     openStatus: (el) => (el.innerHTML = openStatus()),
     hoursRows: (el) => (el.innerHTML = `
       <div class="row"><span class="row__icon">${icon("clock")}</span><span class="row__text"><b>Понедельник — пятница</b></span><span class="row__meta">8:00–21:30</span></div>
