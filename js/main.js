@@ -433,14 +433,29 @@
       el.addEventListener("click", (e) => { const b = e.target.closest(".day-btn"); if (b) show(+b.dataset.day); });
       show(today);
     },
-    plans: (el) => (el.innerHTML = S.prices.map((p, i) => `
-      <article class="card plan${p.popular ? " plan--hot" : ""}" data-anim="up" style="--i:${i}">
-        ${p.popular ? '<span class="plan__badge">Популярный</span>' : ""}
-        <h3>${esc(p.title)}</h3><p>${esc(p.text)}</p>
-        <div class="plan__price">${ph(p.value)}${p.old ? `<s>${esc(p.old)}</s>` : ""}${p.per ? `<small>${esc(p.per)}</small>` : ""}</div>
-        <ul>${p.features.map((f) => `<li>${icon("check")}<span>${ph(f)}</span></li>`).join("")}</ul>
-        <a class="b ${p.popular ? "b--gold" : "b--line"} b--block press" href="${S.club.vkMessages}" target="_blank" rel="noopener">Купить через ВКонтакте</a>
-      </article>`).join("")),
+    /* Абонементы — 3D-карусель (js/coverflow.js). Стартует с «Популярного».
+       Направление автоплея можно задать атрибутом data-direction: forward | backward | pingpong */
+    planCarousel: (el) => {
+      if (!window.Coverflow) return;
+      const start = Math.max(0, S.prices.findIndex((p) => p.popular));
+      new window.Coverflow(el, {
+        items: S.prices,
+        startIndex: start,
+        autoplay: true,
+        direction: el.dataset.direction || "forward",
+        interval: 3000,
+        duration: 900,
+        label: "Абонементы",
+        name: (p) => p.title + ", " + p.value,
+        render: (p) => `
+          ${p.popular ? '<span class="cf-plan__badge">Популярный</span>' : ""}
+          <h3 class="cf-plan__title">${esc(p.title)}</h3>
+          <p class="cf-plan__sub">${esc(p.text)}</p>
+          <div class="cf-plan__glass"><span class="cf-plan__price">${ph(p.value)}</span>${p.old ? `<s>${esc(p.old)}</s>` : ""}${p.per ? `<span class="cf-plan__per">${esc(p.per)}</span>` : ""}</div>
+          <ul class="cf-plan__list">${p.features.map((f) => `<li>${icon("check")}<span>${ph(f)}</span></li>`).join("")}</ul>
+          <a class="b b--gold b--block cf-plan__buy" href="${S.club.vkMessages}" target="_blank" rel="noopener">Купить через ВКонтакте</a>`
+      });
+    },
     quotes: (el) => (el.innerHTML = S.reviews.map((r, i) => `
       <figure class="card quote" style="margin:0;--i:${i}" data-anim="up">
         <div class="quote__stars" aria-hidden="true">★★★★★</div>

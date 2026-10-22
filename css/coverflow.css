@@ -1,0 +1,106 @@
+/* =========================================================
+   Coverflow — 3D-карусель карточек (js/coverflow.js)
+   Акцент — фирменное золото сайта. Анимируются только transform / opacity / filter.
+   ========================================================= */
+.cf {
+  --cf-accent: #e6c766;
+  --cf-glow: rgba(230, 199, 102, .55);
+  --cf-w: min(320px, 76vw);
+  --cf-r: 44px;
+  --cf-gap: 12px;
+  position: relative;
+  overflow: hidden;                 /* боковые и задние карточки не дают горизонтальный скролл страницы */
+  margin: 0 calc(var(--pad) * -1);
+  padding: 8px 0 4px;
+}
+@media (min-width: 640px) { .cf { --cf-w: 340px; --cf-r: 48px; --cf-gap: 14px; } }
+
+.cf__stage {
+  position: relative;
+  height: 600px;
+  perspective: 1600px;
+  transform-style: preserve-3d;
+  touch-action: pan-y;              /* вертикальная прокрутка страницы пальцем работает */
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  outline: none;
+}
+.cf__stage.is-dragging { cursor: grabbing; }
+.cf__stage:focus-visible { box-shadow: inset 0 0 0 3px var(--cf-accent); border-radius: 24px; }
+.cf__slot { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; }
+
+/* Карточка: тёмный фон, толстая неоновая рамка */
+.cf__card {
+  position: absolute; left: 50%; top: 50%;
+  width: var(--cf-w);
+  box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 26px 22px 22px;
+  border-radius: var(--cf-r);
+  border: 5px solid var(--cf-accent);
+  background: radial-gradient(120% 70% at 50% 0%, #2b2618 0%, #151517 55%, #0e0e10 100%);
+  color: #f4f2ed;
+  box-shadow: 0 0 18px var(--cf-glow), inset 0 0 14px rgba(230, 199, 102, .16), 0 30px 60px rgba(0, 0, 0, .45);
+  will-change: transform, opacity, filter;
+  backface-visibility: visible;     /* задние карточки видны зеркально */
+  -webkit-tap-highlight-color: transparent;
+}
+.cf__slot:not(.is-active) .cf__card { cursor: pointer; }
+
+/* Внешняя тонкая рамка со шлейфом (отстаёт на ~85 мс, в покое совпадает с карточкой) */
+.cf__trail {
+  position: absolute; left: 50%; top: 50%;
+  /* высота из JS = высота карточки; отступ рамки добавляется паддингом */
+  box-sizing: content-box;
+  width: calc(var(--cf-w) + var(--cf-gap) * 2 - 4px);
+  padding: var(--cf-gap) 0;
+  border: 2px solid var(--cf-accent);
+  border-radius: calc(var(--cf-r) + var(--cf-gap));
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* Управление */
+.cf__controls { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 8px; }
+.cf__btn {
+  width: 52px; height: 52px; display: grid; place-items: center;
+  border-radius: 50%; border: 2px solid var(--cf-accent); background: transparent; color: var(--fg, #f4f2ed);
+  cursor: pointer; transition: background-color .2s, color .2s, transform .15s;
+}
+.cf__btn svg { width: 22px; height: 22px; }
+.cf__btn:hover { background: var(--cf-accent); color: #141414; }
+.cf__btn:active { transform: scale(.94); }
+.cf__btn:focus-visible { outline: 3px solid var(--cf-accent); outline-offset: 3px; }
+.cf__count { min-width: 56px; text-align: center; font: 600 1rem var(--font-ui, system-ui); color: var(--fg-2, #a6a4aa); font-variant-numeric: tabular-nums; }
+.cf__live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Содержимое карточки абонемента */
+.cf-plan__badge {
+  align-self: flex-start; padding: 6px 12px; border-radius: 999px;
+  background: var(--cf-accent); color: #141414; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+}
+.cf-plan__title { margin: 0; font: 700 1.6rem/1.05 var(--font-display, sans-serif); text-transform: uppercase; color: #fff; }
+.cf-plan__sub { margin: 0; color: rgba(244, 242, 237, .72); font-size: .95rem; }
+.cf-plan__glass {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px;
+  padding: 14px 16px; border-radius: 20px;
+  background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .12);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+.cf-plan__price { font: 700 2.6rem/1 var(--font-display, sans-serif); color: var(--cf-accent); }
+.cf-plan__glass s { color: rgba(244, 242, 237, .55); font-size: 1rem; }
+.cf-plan__per { color: rgba(244, 242, 237, .72); font-size: .95rem; }
+.cf-plan__list { list-style: none; margin: 4px 0 6px; padding: 0; display: grid; gap: 8px; font-size: .95rem; }
+.cf-plan__list li { display: flex; gap: 10px; }
+.cf-plan__list svg { flex: none; width: 18px; height: 18px; margin-top: 3px; color: var(--cf-accent); }
+.cf-plan__list .ph { color: #e8c766; background: rgba(232, 199, 102, .14); }
+.cf-plan__buy { margin-top: auto; }
+
+/* Без анимаций по настройке системы: без 3D, только смена прозрачности */
+.cf--reduce .cf__trail { display: none; }
+.cf--reduce .cf__card { will-change: opacity; }
+@media (prefers-reduced-motion: reduce) {
+  .cf__trail { display: none; }
+  .cf__btn { transition: none; }
+}

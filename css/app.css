@@ -236,7 +236,7 @@ body { padding-bottom: calc(var(--tabbar-h) + var(--safe-b)); }
 .rail::-webkit-scrollbar { display: none; }
 .rail > * { scroll-snap-align: start; }
 @media (min-width: 600px) { .rail { grid-auto-columns: 46%; } }
-@media (min-width: 1024px) { .rail { grid-auto-flow: row; grid-template-columns: repeat(3, 1fr); grid-auto-columns: auto; overflow: visible; margin: 0; padding: 0; } .rail--4 { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 1024px) { .rail { grid-auto-flow: row; grid-template-columns: repeat(3, 1fr); grid-auto-columns: auto; overflow: visible; margin: 0; padding: 0; } }
 
 /* Карточки направлений с фото (реф. 1) */
 .photo-card { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 300px; padding: 18px; border-radius: var(--r-xl); overflow: hidden;
@@ -299,18 +299,7 @@ body { padding-bottom: calc(var(--tabbar-h) + var(--safe-b)); }
 .empty { padding: 22px 16px; text-align: center; color: var(--fg-2); }
 
 /* Тарифы */
-.plan { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 22px 18px 18px; }
-.plan h3 { margin: 0; font: 600 1.3rem/1.1 var(--font-display); text-transform: uppercase; }
-.plan p { color: var(--fg-2); font-size: .94rem; }
-.plan__price { font: 600 2rem/1.1 var(--font-display); margin: 10px 0 6px; }
-.plan__price small { font: 400 .9rem var(--font-ui); color: var(--fg-2); margin-left: 4px; }
-.plan ul { list-style: none; padding: 0; margin: 4px 0 16px; display: grid; gap: 8px; font-size: .95rem; }
-.plan li { display: flex; gap: 10px; }
-.plan li svg { flex: none; width: 18px; height: 18px; color: var(--gold); margin-top: 3px; }
-.plan .b { margin-top: auto; }
-.plan--hot h3 { padding-right: 104px; }
 .plan--hot { border: 1.5px solid transparent; background: linear-gradient(var(--card), var(--card)) padding-box, var(--gold-grad) border-box; }
-.plan__badge { position: absolute; top: 14px; right: 14px; padding: 5px 10px; border-radius: var(--r-pill); background: var(--gold-grad); color: var(--on-gold); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .note { margin-top: 14px; font-size: .9rem; color: var(--fg-2); }
 
 /* Отзывы */
@@ -517,7 +506,6 @@ body { padding-bottom: calc(var(--tabbar-h) + var(--safe-b)); }
 .promo--gold p { color: var(--on-gold); opacity: .82; }
 .promo--gold .promo__badge { background: #141414; color: #e8c766; font-size: 1.1rem; }
 
-.plan__price s { font: 400 1rem var(--font-ui); color: var(--fg-2); margin-left: 10px; }
 
 .rating { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2px 14px; padding: 18px; text-decoration: none; color: inherit; margin-bottom: var(--gap); }
 .rating b { grid-row: span 2; font: 700 3.2rem/1 var(--font-display); color: var(--gold); }
